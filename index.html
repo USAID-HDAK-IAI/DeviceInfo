@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="vanilla.js"></script>
+</head>
+<body>
+    <div style="width:100%; display: inline-block; position: relative;">
+    <img src="EDCLogo.png" alt="HDAK" style="width:30%; float: left;"/>
+    <img src="usaid.jpeg" alt="HDAK" style="width:45%; float: right;"/>
+    </div>
+
+    <div style="width:100%;">
+        <center><h3 style="color:darkblue;"><b>Device Info (Testing Environment)</b></h3></center>
+    <!--
+    <div style="margin: 10%; background-color:#dad1be; border-radius: 5px;">
+        <div style="margin: 10%;">
+        <br>
+        <center><h3 style="color:darkblue;">IAI Survey Form</h3></center>
+        <span style="font-weight : bold; color: darkblue;">1. Full Names</span></br>
+        <input type="text" style="width:100%;"/></br></br>
+        <span style="font-weight : bold; color: darkblue;">2. Telephone Number</span></br>
+        <input type="text" style="width:100%;"/><br><br>
+
+        <span style="font-weight : bold; color: darkblue;">3. How many video have you listened?</span></br>
+        <input type="radio" id="age1" name="age" value="30">
+            <label for="age1">1 Episode</label><br>
+            <input type="radio" id="age2" name="age" value="60">
+            <label for="age2">2 Episodes</label><br>  
+            <input type="radio" id="age3" name="age" value="100">
+            <label for="age3">More than 2 Episodes</label><br><br>
+        
+        <span style="font-weight : bold; color: darkblue;">4. How satisfied are you?</span></br>
+        <input type="radio" id="age1" name="age2" value="30">
+            <label for="age1">I am very satisfied.</label><br>
+            <input type="radio" id="age2" name="age2" value="60">
+            <label for="age2">I am somehow satisfied.</label><br>  
+            <input type="radio" id="age3" name="age2" value="100">
+            <label for="age3">I am not satisfied at all.</label><br><br>
+          
+        <center><input type="submit" value="Submit" style="font-weight : bold; color:darkblue; height: 50px; width: 70%; border-radius: 5px;"></center>
+        <br>
+        </div>
+    </div>
+    
+-->
+<br>
+    <div style="margin: 5%; background-color:#ffffff; border-radius: 5px; box-shadow: 5px 5px #888888; border: 1px solid rgb(0, 0, 0)">
+        <div style="margin: 5%;">
+            <br>
+            <div id="time1" style="width:100%; position: relative; display: block;  color: rgb(0, 0, 0); margin: auto;"><center><img src="processing.gif" alt="HDAK" style="width:30%"/></center></div>
+            <br>
+        </div>
+    </div>
+    <!--<div id="time1" style="width:100%; position: relative; display: block;  color: rgb(0, 0, 0); margin: auto;"><center><img src="processing.gif" alt="HDAK" style="width:30%"/></center></div>-->
+    <center><span id="time" style="color: rgb(0, 0, 0);"></span></center><br><br>
+
+    </div>
+    <script>
+            // get a new date (locale machine date time)
+            var date = new Date();
+            var n = date.toDateString(); 
+            var time = date.toLocaleTimeString();
+            document.getElementById('time').innerHTML = n + ' ' + time;
+    </script>
+    
+    <script>
+       $(document).ready(function(){
+           //window.location.href = 'hdakwrnaudep410062020.mp3';
+        });
+    </script>
+
+    <script>
+
+           var r = new XMLHttpRequest();
+           r.open("GET", "https://nserv1.herokuapp.com/API/deviceInfo", true);
+           
+           r.onreadystatechange = function () {
+               if (r.readyState != 4) return;
+               //console.log("Success: " + r.responseText);
+               document.getElementById('time1').innerHTML ="<span style=\"display:block; margin:auto;\">"+convert(r.responseText)+"</span>";
+           };
+           r.send();
+
+    function convert(a) {	
+	var input_str=a; //store input
+	var text_input; //store input after beging trim()med
+	var output_html=""; //store output
+	var counter;	
+	
+	//input_str=document.getElementById('in_txt').value; //get input and store it in input_str
+	text_input=input_str.trim(); //trim() input
+	if(text_input.length > 0){
+		output_html+="<p>"; //begin by creating paragraph
+		for(counter=0; counter < text_input.length; counter++){
+			switch (text_input[counter]){
+				case '\n':
+					if (text_input[counter+1]==='\n'){
+						output_html+="</p>\n<p>";
+						counter++;
+					}
+					else output_html+="<br>";			
+					break;
+				
+				case ' ':
+					if(text_input[counter-1] != ' ' && text_input[counter-1] != '\t')
+						output_html+=" ";														
+					break;
+					
+				case '\t':
+					if(text_input[counter-1] != '\t')
+						output_html+=" ";
+					break;
+				
+				case '&':
+					output_html+="&amp;";
+					break;
+				
+				case '"':
+					output_html+="&quot;";
+					break;
+				
+				case '>':
+					output_html+="&gt;";
+					break;
+				
+				case '<':
+					output_html+="&lt;";
+					break;				
+				
+				default:
+					output_html+=text_input[counter];
+					
+			}
+					
+		}
+		output_html+="</p>"; //finally close paragraph
+    }
+
+    return output_html
+};
+
+    </script>
+
+</body>
+</html>
